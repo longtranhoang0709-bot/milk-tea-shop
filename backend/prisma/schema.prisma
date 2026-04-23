@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model cart_items {
+  id         Int       @id @default(autoincrement())
+  user_id    Int?
+  product_id Int?
+  quantity   Int?
+  users      users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "cart_items_ibfk_1")
+  products   products? @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "cart_items_ibfk_2")
+
+  @@index([product_id], map: "product_id")
+  @@index([user_id], map: "user_id")
+}
+
+model categories {
+  id       Int        @id @default(autoincrement())
+  name     String?    @db.VarChar(100)
+  products products[]
+}
+
+model order_items {
+  id             Int              @id @default(autoincrement())
+  order_id       Int?
+  product_id     Int?
+  quantity       Int?
+  price          Float?           @db.Float
+  orders         orders?          @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "order_items_ibfk_1")
+  products       products?        @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "order_items_ibfk_2")
+  order_toppings order_toppings[]
+
+  @@index([order_id], map: "order_id")
+  @@index([product_id], map: "product_id")
+}
+
+model order_toppings {
+  id            Int          @id @default(autoincrement())
+  order_item_id Int?
+  topping_id    Int?
+  order_items   order_items? @relation(fields: [order_item_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "order_toppings_ibfk_1")
+  toppings      toppings?    @relation(fields: [topping_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "order_toppings_ibfk_2")
+
+  @@index([order_item_id], map: "order_item_id")
+  @@index([topping_id], map: "topping_id")
+}
+
+model orders {
+  id          Int           @id @default(autoincrement())
+  user_id     Int?
+  total_price Float?        @db.Float
+  status      String?       @default("pending") @db.VarChar(50)
+  created_at  DateTime?     @default(now()) @db.Timestamp(0)
+  order_items order_items[]
+  users       users?        @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "orders_ibfk_1")
+
+  @@index([user_id], map: "user_id")
+}
+
+model product_variants {
+  id         Int       @id @default(autoincrement())
+  product_id Int?
+  size       String?   @db.VarChar(10)
+  price      Float?    @db.Float
+  products   products? @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "product_variants_ibfk_1")
+
+  @@index([product_id], map: "product_id")
+}
+
+model products {
+  id               Int                @id @default(autoincrement())
+  name             String?            @db.VarChar(100)
+  price            Float?             @db.Float
+  image            String?            @db.VarChar(255)
+  description      String?            @db.Text
+  category_id      Int?
+  cart_items       cart_items[]
+  order_items      order_items[]
+  product_variants product_variants[]
+  categories       categories?        @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "products_ibfk_1")
+
+  @@index([category_id], map: "category_id")
+}
+
+model toppings {
+  id             Int              @id @default(autoincrement())
+  name           String?          @db.VarChar(100)
+  price          Float?           @db.Float
+  order_toppings order_toppings[]
+}
+
+model users {
+  id         Int          @id @default(autoincrement())
+  name       String?      @db.VarChar(100)
+  email      String?      @unique(map: "email") @db.VarChar(100)
+  password   String?      @db.VarChar(255)
+  role       String?      @default("user") @db.VarChar(20)
+  created_at DateTime?    @default(now()) @db.Timestamp(0)
+  cart_items cart_items[]
+  orders     orders[]
+}
