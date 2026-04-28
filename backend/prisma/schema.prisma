@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -96,12 +96,21 @@ model toppings {
 }
 
 model users {
-  id         Int          @id @default(autoincrement())
-  name       String?      @db.VarChar(100)
-  email      String?      @unique(map: "email") @db.VarChar(100)
-  password   String?      @db.VarChar(255)
-  role       String?      @default("user") @db.VarChar(20)
-  created_at DateTime?    @default(now()) @db.Timestamp(0)
-  cart_items cart_items[]
-  orders     orders[]
+  id            Int          @id @default(autoincrement())
+  name          String?      @db.VarChar(100)
+  email         String?      @unique(map: "email") @db.VarChar(100)
+  password      String?      @db.VarChar(255)
+  role          String?      @default("user") @db.VarChar(20)
+  created_at    DateTime?    @default(now()) @db.Timestamp(0)
+  dia_chi       String?      @db.VarChar(255)
+  so_dien_thoai String?      @db.VarChar(10)
+  cart_items    cart_items[]
+  orders        orders[]
+}
+
+model password_resets {
+  id         Int       @id @default(autoincrement())
+  email      String?   @db.VarChar(100)
+  token      String?   @db.VarChar(255)
+  created_at DateTime? @default(now()) @db.Timestamp(0)
 }
