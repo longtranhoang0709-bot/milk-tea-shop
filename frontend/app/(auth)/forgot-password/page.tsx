@@ -44,7 +44,6 @@ export default function ForgotPasswordPage() {
     setMessage(null);
     setIsLoading(true);
     try {
-      // Gọi đúng router POST /api/auth/forgot-password ở Backend
       const response = await fetch(
         "http://localhost:5000/api/auth/forgot-password",
         {

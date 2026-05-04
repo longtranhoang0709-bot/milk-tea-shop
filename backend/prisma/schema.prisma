@@ -52,13 +52,16 @@ model order_toppings {
 }
 
 model orders {
-  id          Int           @id @default(autoincrement())
-  user_id     Int?
-  total_price Float?        @db.Float
-  status      String?       @default("pending") @db.VarChar(50)
-  created_at  DateTime?     @default(now()) @db.Timestamp(0)
-  order_items order_items[]
-  users       users?        @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "orders_ibfk_1")
+  id               Int           @id @default(autoincrement())
+  user_id          Int?
+  total_price      Float?        @db.Float
+  status           String?       @default("pending") @db.VarChar(50)
+  created_at       DateTime?     @default(now()) @db.Timestamp(0)
+  customer_name    String?       @db.VarChar(100)
+  customer_phone   String?       @db.VarChar(20)
+  shipping_address String?       @db.VarChar(255)
+  order_items      order_items[]
+  users            users?        @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "orders_ibfk_1")
 
   @@index([user_id], map: "user_id")
 }
@@ -92,6 +95,7 @@ model toppings {
   id             Int              @id @default(autoincrement())
   name           String?          @db.VarChar(100)
   price          Float?           @db.Float
+  image          String?          @db.VarChar(255)
   order_toppings order_toppings[]
 }
 
@@ -104,6 +108,7 @@ model users {
   created_at    DateTime?    @default(now()) @db.Timestamp(0)
   dia_chi       String?      @db.VarChar(255)
   so_dien_thoai String?      @db.VarChar(10)
+  status        String?      @default("active") @db.VarChar(20)
   cart_items    cart_items[]
   orders        orders[]
 }

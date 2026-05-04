@@ -25,7 +25,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-// 1. Cập nhật Schema: Thêm SĐT, Địa chỉ và Xác nhận mật khẩu
 const registerSchema = z
   .object({
     name: z.string().min(2, "Tên phải có ít nhất 2 ký tự."),
@@ -39,7 +38,7 @@ const registerSchema = z
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Mật khẩu xác nhận không khớp.",
-    path: ["confirmPassword"], // Chỉ định lỗi sẽ hiển thị ở field confirmPassword
+    path: ["confirmPassword"],
   });
 
 export default function RegisterPage() {
@@ -63,14 +62,13 @@ export default function RegisterPage() {
     setServerError("");
     setIsLoading(true);
 
-    // 2. Tách confirmPassword ra, chỉ gửi những dữ liệu backend cần
     const { confirmPassword, ...dataToSend } = values;
 
     try {
       const response = await fetch("http://localhost:5000/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dataToSend), // Dữ liệu gửi đi giống hệt Postman
+        body: JSON.stringify(dataToSend),
       });
 
       const data = await response.json();
@@ -122,7 +120,6 @@ export default function RegisterPage() {
                 )}
               />
 
-              {/* Nhóm Email và Số điện thoại lên cùng 1 hàng cho gọn */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}

@@ -43,10 +43,10 @@ exports.login = async (req, res) => {
       password,
     );
 
-    // Lưu Refresh Token vào HTTP-Only Cookie để bảo mật
+    // Lưu Refresh Token
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: false, // Đổi thành true nếu chạy trên HTTPS
+      secure: false, 
       sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 ngày
     });
@@ -67,7 +67,7 @@ exports.login = async (req, res) => {
   }
 };
 
-// 3. REFRESH TOKEN (Cấp lại Access Token mới)
+// 3. REFRESH TOKEN 
 exports.refresh = async (req, res) => {
   try {
     const token = req.cookies.refreshToken;

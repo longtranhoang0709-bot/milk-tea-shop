@@ -128,7 +128,6 @@ function ResetPasswordContent() {
           </div>
         )}
 
-        {/* Chỉ hiện form nếu có token hợp lệ */}
         {token ? (
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

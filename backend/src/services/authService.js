@@ -16,7 +16,6 @@ const transporter = nodemailer.createTransport({
 });
 
 class AuthService {
-  // Đã bỏ so_dien_thoai và dia_chi, đổi ho_ten thành name
   async register({ email, password, name, so_dien_thoai, dia_chi }) {
     const check = await prisma.users.findUnique({ where: { email } });
     if (check) throw new Error("EMAIL_EXISTS");
@@ -41,7 +40,6 @@ class AuthService {
     const checkPass = bcrypt.compareSync(password, user.password);
     if (!checkPass) throw new Error("WRONG_PASSWORD");
 
-    // Lấy role trực tiếp từ cột role của bảng users
     const roles = [user.role];
 
     const accessToken = jwt.sign({ id: user.id, roles }, ACCESS_KEY, {
@@ -76,7 +74,6 @@ class AuthService {
 
     const token = crypto.randomBytes(32).toString("hex");
 
-    // Tên bảng trong Prisma sẽ là password_resets
     await prisma.password_resets.deleteMany({ where: { email } });
     await prisma.password_resets.create({ data: { email, token } });
 
@@ -100,7 +97,6 @@ class AuthService {
 
     const hashed = bcrypt.hashSync(newPassword, 10);
 
-    // Update mật khẩu vào bảng users
     await prisma.users.update({
       where: { email: resetReq.email },
       data: { password: hashed },

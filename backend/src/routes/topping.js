@@ -2,23 +2,20 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const path = require("path");
-const productController = require("../controllers/productController");
+const toppingController = require("../controllers/toppingController");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/"); 
+    cb(null, "uploads/");
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname));
   },
 });
 const upload = multer({ storage: storage });
-
-router.get("/", productController.getAllProducts);
-
-router.post("/", upload.single("image"), productController.createProduct);
-router.put("/:id", upload.single("image"), productController.updateProduct);
-
-router.delete("/:id", productController.deleteProduct);
+router.get("/", toppingController.getAllToppings);
+router.post("/", upload.single("image"), toppingController.createTopping);
+router.put("/:id", upload.single("image"), toppingController.updateTopping);
+router.delete("/:id", toppingController.deleteTopping);
 
 module.exports = router;

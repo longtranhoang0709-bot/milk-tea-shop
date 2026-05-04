@@ -48,13 +48,12 @@ export default function LoginPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
-        credentials: "include", // Quan trọng để nhận Refresh Token vào Cookie
+        credentials: "include",
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        // Lưu Access Token
         localStorage.setItem("accessToken", data.accessToken);
 
         // Phân quyền dựa trên role từ Backend
